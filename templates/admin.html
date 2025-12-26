@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+
+<h2>🏦 Admin Token Issuer</h2>
+
+<form action="/admin/issue" method="post">
+    <input name="user" placeholder="Username" required>
+    <input name="amount" placeholder="Amount" required>
+    <button type="submit">Issue Tokens</button>
+</form>
+
+<h3>👛 Wallets</h3>
+<table border="1">
+<tr><th>User</th><th>Balance</th></tr>
+{% for w in wallets %}
+<tr>
+    <td>{{ w[0] }}</td>
+    <td>{{ w[1] }}</td>
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
+
+
+
+
+

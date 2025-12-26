@@ -1,0 +1,112 @@
+body {
+    margin: 0;
+    font-family: Poppins, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: white;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+    padding: 30px;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: rgba(255,255,255,0.1);
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    background: #00e6ff;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.wallet-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.wallet-card {
+    background: rgba(255,255,255,0.15);
+    padding: 20px;
+    border-radius: 12px;
+    width: 220px;
+}
+
+.wallet-user {
+    font-size: 1.1em;
+}
+
+.wallet-balance {
+    font-size: 1.4em;
+    margin: 10px 0;
+}
+
+.progress {
+    background: rgba(255,255,255,0.2);
+    height: 8px;
+    border-radius: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #28a745;
+    border-radius: 5px;
+}
+
+.ledger-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.block {
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.15);
+    border-left: 6px solid;
+}
+
+.block.safe {
+    border-color: #28a745;
+}
+
+.block.fraud {
+    border-color: #ff4d4d;
+}
+
+.block-header {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+
+

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI + Blockchain Banking System</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+        }
+
+        header {
+            padding: 20px 40px;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            color: #00e6ff;
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .btn-primary { background: #00e6ff; }
+        .btn-warning { background: #ffc107; }
+
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: rgba(0,0,0,0.4);
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255,255,255,0.08);
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🏦 AI Blockchain Banking</h1>
+    <h3>Secure • Smart • Transparent</h3>
+</header>
+
+<div class="container">
+    <div class="dashboard">
+
+        <div class="card">
+            <h2>💳 New Transaction</h2>
+            <input id="sender" placeholder="Sender Wallet">
+            <input id="receiver" placeholder="Receiver Wallet">
+            <input id="amount" placeholder="Amount">
+            <input id="frequency" placeholder="Frequency">
+            <button class="btn btn-primary" onclick="sendTx()">Transfer</button>
+            <div id="result"></div>
+        </div>
+
+        <div class="card">
+            <h2>📊 Dashboard</h2>
+            <button class="btn btn-warning" onclick="loadBlockchain()">View Blockchain</button>
+            <button class="btn btn-warning" onclick="loadWallets()">View Wallets</button>
+            <div id="output"></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function sendTx() {
+    fetch("/transaction", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            sender: sender.value,
+            receiver: receiver.value,
+            amount: amount.value,
+            frequency: frequency.value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        result.innerText = data.message;
+    });
+}
+
+function loadBlockchain() {
+    fetch("/blockchain")
+    .then(res => res.json())
+    .then(data => {
+        let html = "<h3>Blockchain</h3><table><tr><th>Index</th><th>Data</th></tr>";
+        data.forEach(b => {
+            html += `<tr><td>${b.index}</td><td>${JSON.stringify(b.data)}</td></tr>`;
+        });
+        html += "</table>";
+        output.innerHTML = html;
+    });
+}
+
+function loadWallets() {
+    fetch("/wallets")
+    .then(res => res.json())
+    .then(data => {
+        let html = "<h3>Wallets</h3><table><tr><th>ID</th><th>Balance</th></tr>";
+        for (let w in data) {
+            html += `<tr><td>${w}</td><td>${data[w]}</td></tr>`;
+        }
+        html += "</table>";
+        output.innerHTML = html;
+    });
+}
+</script>
+
+</body>
+</html>
+
+

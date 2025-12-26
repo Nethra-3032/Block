@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QIE Bank Dashboard</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1 class="title">
+        <i class="fa-solid fa-building-columns"></i>
+        QIE Bank – AI + Blockchain Fraud Detection
+    </h1>
+
+    <!-- LOGIN / REGISTER -->
+    <div class="card">
+        <h2><i class="fa-solid fa-user-lock"></i> Login / Register</h2>
+
+        <input id="username" placeholder="Username">
+        <input id="password" type="password" placeholder="Password">
+
+        <div class="btn-group">
+            <button onclick="registerUser()">Register</button>
+            <button onclick="loginUser()">Login</button>
+        </div>
+
+        <p id="authStatus"></p>
+    </div>
+
+    <!-- TRANSACTION -->
+    <div class="card" id="txCard" style="display:none">
+        <h2><i class="fa-solid fa-paper-plane"></i> Send Transaction</h2>
+
+        <input id="sender" placeholder="Sender Username">
+        <input id="receiver" placeholder="Receiver Username">
+        <input id="amount" type="number" placeholder="Amount">
+        <input id="frequency" type="number" placeholder="Frequency">
+
+        <button onclick="sendTransaction()">Send</button>
+
+        <h3 id="txResult"></h3>
+    </div>
+
+    <!-- WALLETS -->
+    <div class="card" id="walletCard" style="display:none">
+        <h2><i class="fa-solid fa-wallet"></i> Wallet Balances</h2>
+        <div class="wallet-container" id="wallets"></div>
+    </div>
+
+    <!-- BLOCKCHAIN LEDGER -->
+    <div class="card" id="ledgerCard" style="display:none">
+        <h2><i class="fa-solid fa-link"></i> Blockchain Ledger</h2>
+        <div class="ledger-container" id="ledger"></div>
+    </div>
+
+</div>
+
+<script>
+async function registerUser() {
+    const form = new FormData();
+    form.append("username", username.value);
+    form.append("password", password.value);
+
+    const res = await fetch("/register", { method: "POST", body: form });
+    authStatus.innerText = await res.text();
+}
+
+async function loginUser() {
+    const form = new FormData();
+    form.append("username", username.value);
+    form.append("password", password.value);
+
+    const res = await fetch("/login", { method: "POST", body: form });
+    const text = await res.text();
+
+    if (text === "Success") {
+        authStatus.innerText = "Login successful!";
+        txCard.style.display = "block";
+        walletCard.style.display = "block";
+        ledgerCard.style.display = "block";
+        loadWallets();
+        loadTransactions();
+    } else {
+        authStatus.innerText = text;
+    }
+}
+
+async function sendTransaction() {
+    const res = await fetch("/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            sender: sender.value,
+            receiver: receiver.value,
+            amount: amount.value,
+            frequency: frequency.value
+        })
+    });
+
+    const data = await res.json();
+    txResult.innerText =
+        data.status === "Safe"
+        ? "✅ Transaction Legit"
+        : "🚨 Fraud Detected";
+
+    loadWallets();
+    loadTransactions();
+}
+
+async function loadWallets() {
+    const res = await fetch("/wallets");
+    const wallets = await res.json();
+    walletsDiv = document.getElementById("wallets");
+    walletsDiv.innerHTML = "";
+
+    for (let user in wallets) {
+        const bal = wallets[user];
+        const percent = Math.min((bal / 200000) * 100, 100);
+
+        walletsDiv.innerHTML += `
+            <div class="wallet-card">
+                <div class="wallet-user">
+                    <i class="fa-solid fa-user"></i> ${user}
+                </div>
+                <div class="wallet-balance">₹ ${bal.toFixed(2)}</div>
+                <div class="progress">
+                    <div class="progress-fill"
+                         style="width:${percent}%"></div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+async function loadTransactions() {
+    const res = await fetch("/transactions");
+    const txs = await res.json();
+    ledger.innerHTML = "";
+
+    txs.forEach(tx => {
+        ledger.innerHTML += `
+            <div class="block
+                ${tx.status === "Safe" ? "safe" : "fraud"}">
+                <div class="block-header">
+                    ${tx.sender} → ${tx.receiver}
+                </div>
+                <div class="block-body">
+                    Amount: ₹ ${tx.amount}<br>
+                    Frequency: ${tx.frequency}<br>
+                    Status: ${tx.status}
+                </div>
+            </div>
+        `;
+    });
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
